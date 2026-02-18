@@ -36,7 +36,7 @@ app.use(errorHandler);
 
 // Serve static files in production
 if (config.nodeEnv === 'production') {
-  const staticPath = path.join(__dirname, '../../public');
+  const staticPath = path.join(__dirname, '../public');
   app.use(express.static(staticPath));
 
   // Handle Angular routes - serve index.html for non-API routes
