@@ -21,6 +21,7 @@ import { HelloCakeScraper } from './HelloCakeScraper.js';
 import { HenryMedsScraper } from './HenryMedsScraper.js';
 import { LemonaidScraper } from './LemonaidScraper.js';
 import { AgelessRxScraper } from './AgelessRxScraper.js';
+import { MaximusTribeScraper } from './MaximusTribeScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -45,6 +46,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   HENRY_MEDS: () => new HenryMedsScraper(),
   LEMONAID: () => new LemonaidScraper(),
   AGELESS_RX: () => new AgelessRxScraper(),
+  MAXIMUS_TRIBE: () => new MaximusTribeScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
