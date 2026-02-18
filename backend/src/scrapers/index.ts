@@ -20,6 +20,7 @@ import { HoneHealthScraper } from './HoneHealthScraper.js';
 import { HelloCakeScraper } from './HelloCakeScraper.js';
 import { HenryMedsScraper } from './HenryMedsScraper.js';
 import { LemonaidScraper } from './LemonaidScraper.js';
+import { AgelessRxScraper } from './AgelessRxScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -43,6 +44,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   HELLO_CAKE: () => new HelloCakeScraper(),
   HENRY_MEDS: () => new HenryMedsScraper(),
   LEMONAID: () => new LemonaidScraper(),
+  AGELESS_RX: () => new AgelessRxScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
