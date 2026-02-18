@@ -11,6 +11,13 @@ import { WispScraper } from './WispScraper.js';
 import { KeepsScraper } from './KeepsScraper.js';
 import { BluechewScraper } from './BluechewScraper.js';
 import { GoodRxScraper } from './GoodRxScraper.js';
+import { AltoPharmacyScraper } from './AltoPharmacyScraper.js';
+import { BlinkHealthScraper } from './BlinkHealthScraper.js';
+import { CerebralScraper } from './CerebralScraper.js';
+import { EdenScraper } from './EdenScraper.js';
+import { EvernowScraper } from './EvernowScraper.js';
+import { HoneHealthScraper } from './HoneHealthScraper.js';
+import { HelloCakeScraper } from './HelloCakeScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -25,6 +32,13 @@ export const scrapers: Record<string, () => BaseScraper> = {
   KEEPS: () => new KeepsScraper(),
   BLUECHEW: () => new BluechewScraper(),
   GOODRX: () => new GoodRxScraper(),
+  ALTO_PHARMACY: () => new AltoPharmacyScraper(),
+  BLINK_HEALTH: () => new BlinkHealthScraper(),
+  CEREBRAL: () => new CerebralScraper(),
+  EDEN: () => new EdenScraper(),
+  EVERNOW: () => new EvernowScraper(),
+  HONE_HEALTH: () => new HoneHealthScraper(),
+  HELLO_CAKE: () => new HelloCakeScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
