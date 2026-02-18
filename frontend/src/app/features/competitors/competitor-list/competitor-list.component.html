@@ -1,0 +1,61 @@
+<div class="competitor-list-page">
+  <header class="page-header">
+    <h1>Competitor Analysis</h1>
+    <p>Track and compare competitor pharmacy offerings</p>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="competitors-grid">
+      @for (comp of competitors(); track comp.competitor) {
+        <div class="competitor-card">
+          <h3>{{ comp.competitor }}</h3>
+          <div class="stats">
+            <div class="stat">
+              <span class="value">{{ comp.count | number }}</span>
+              <span class="label">Drugs</span>
+            </div>
+            @if (comp.latestScrape) {
+              <div class="stat">
+                <span class="value" [ngClass]="getStatusClass(comp.latestScrape.status)">
+                  {{ comp.latestScrape.status }}
+                </span>
+                <span class="label">Last Scrape</span>
+              </div>
+            }
+          </div>
+          @if (comp.latestScrape) {
+            <p class="last-updated">Updated: {{ formatDate(comp.latestScrape.created_at) }}</p>
+          }
+          <div class="actions">
+            <a [routerLink]="['/competitors', comp.competitor]" class="btn-view">View Drugs</a>
+            @if (authService.isAdmin() && availableScrapers().includes(comp.competitor)) {
+              <button
+                class="btn-scrape"
+                (click)="runScraper(comp.competitor)"
+                [disabled]="scraping() !== null"
+              >
+                {{ scraping() === comp.competitor ? 'Scraping...' : 'Run Scraper' }}
+              </button>
+            }
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No competitor data yet.</p>
+          @if (authService.isAdmin() && availableScrapers().length > 0) {
+            <p>Run a scraper to get started:</p>
+            <div class="scraper-buttons">
+              @for (scraper of availableScrapers(); track scraper) {
+                <button (click)="runScraper(scraper)" [disabled]="scraping() !== null">
+                  {{ scraping() === scraper ? 'Scraping...' : 'Scrape ' + scraper }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

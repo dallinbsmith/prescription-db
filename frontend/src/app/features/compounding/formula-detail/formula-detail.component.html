@@ -1,0 +1,90 @@
+@if (loading()) {
+  <div class="loading">Loading...</div>
+} @else if (formula()) {
+  <div class="formula-detail-page">
+    <nav class="breadcrumb">
+      <a routerLink="/compounding/formulas">Formulas</a>
+      <span>/</span>
+      <span>{{ formula()!.name }}</span>
+    </nav>
+
+    <div class="formula-header">
+      <h1>{{ formula()!.name }}</h1>
+      <div class="badges">
+        <span class="badge type">{{ formula()!.formula_type }}</span>
+        <span class="badge" [class]="'status-' + formula()!.status.toLowerCase()">{{ formula()!.status }}</span>
+        <span class="badge species">{{ formula()!.species }}</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <section class="info-card">
+        <h2>Formula Details</h2>
+        <dl>
+          <div class="info-row">
+            <dt>Dosage Form</dt>
+            <dd>{{ formula()!.dosage_form || '-' }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Route</dt>
+            <dd>{{ formula()!.route || '-' }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Beyond Use Date</dt>
+            <dd>{{ formula()!.beyond_use_date || '-' }}</dd>
+          </div>
+          @if (formula()!.drug_name) {
+            <div class="info-row">
+              <dt>Based on Drug</dt>
+              <dd>
+                <a [routerLink]="['/drugs', formula()!.drug_id]">{{ formula()!.drug_name }}</a>
+              </dd>
+            </div>
+          }
+        </dl>
+      </section>
+
+      <section class="info-card">
+        <h2>Ingredients</h2>
+        @if (formula()!.ingredients?.length) {
+          <table class="ingredients-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ingredient</th>
+                <th>Quantity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ing of formula()!.ingredients; track ing.id) {
+                <tr>
+                  <td>{{ ing.order_index + 1 }}</td>
+                  <td>
+                    {{ ing.ingredient_name }}
+                    @if (ing.cas_number) {
+                      <span class="cas">({{ ing.cas_number }})</span>
+                    }
+                  </td>
+                  <td>{{ ing.quantity }} {{ ing.unit }}</td>
+                  <td>{{ ing.purpose || '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <p class="no-data">No ingredients defined</p>
+        }
+      </section>
+
+      @if (formula()!.notes) {
+        <section class="info-card notes-card">
+          <h2>Notes</h2>
+          <p>{{ formula()!.notes }}</p>
+        </section>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="not-found">Formula not found</div>
+}

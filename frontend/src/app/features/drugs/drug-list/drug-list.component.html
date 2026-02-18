@@ -1,0 +1,146 @@
+<div class="drug-list-page">
+  <header class="page-header">
+    <h1>Drug Database</h1>
+    <p>{{ total() | number }} drugs found</p>
+  </header>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="search()"
+        placeholder="Search by name, NDC, or manufacturer..."
+      />
+      <button (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+
+    <div class="filters">
+      <select [(ngModel)]="filters.rx_otc" (change)="onFilterChange()">
+        <option [value]="undefined">All Types</option>
+        @for (opt of rxOtcOptions; track opt) {
+          <option [value]="opt">{{ opt }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="filters.dea_schedule" (change)="onFilterChange()">
+        <option [value]="undefined">All DEA Schedules</option>
+        @for (opt of deaScheduleOptions; track opt) {
+          <option [value]="opt">{{ opt === 'NONE' ? 'Non-Controlled' : 'Schedule ' + opt }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="filters.species" (change)="onFilterChange()">
+        <option [value]="undefined">All Species</option>
+        @for (opt of speciesOptions; track opt) {
+          <option [value]="opt">{{ opt }}</option>
+        }
+      </select>
+
+      <button class="clear-btn" (click)="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+
+  <div class="drug-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Generic Name</th>
+          <th>NDC</th>
+          <th>Form</th>
+          <th>Manufacturer</th>
+          <th>Type</th>
+          <th>DEA</th>
+          <th>Species</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (drug of drugs(); track drug.id) {
+          <tr [routerLink]="['/drugs', drug.id]">
+            <td class="drug-name">{{ drug.name }}</td>
+            <td>{{ drug.generic_name || '-' }}</td>
+            <td class="ndc">{{ drug.ndc }}</td>
+            <td>{{ drug.dosage_form || '-' }}</td>
+            <td>{{ drug.manufacturer || '-' }}</td>
+            <td>
+              <span class="badge" [class.rx]="drug.rx_otc === 'RX'" [class.otc]="drug.rx_otc === 'OTC'">
+                {{ drug.rx_otc }}
+              </span>
+            </td>
+            <td>
+              @if (drug.dea_schedule) {
+                <span class="badge dea" [ngClass]="getDeaClass(drug.dea_schedule)">
+                  {{ drug.dea_schedule }}
+                </span>
+              } @else {
+                -
+              }
+            </td>
+            <td>{{ drug.species }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="empty">
+              @if (loading()) {
+                Loading...
+              } @else {
+                No drugs found
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (total() > 0) {
+    <div class="pagination">
+      <div class="pagination-info">
+        Showing {{ startIndex() | number }}-{{ endIndex() | number }} of {{ total() | number }}
+      </div>
+
+      <div class="pagination-controls">
+        <button
+          class="page-btn"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1 || loading()"
+        >
+          Previous
+        </button>
+
+        @for (page of visiblePages(); track $index) {
+          @if (page === '...') {
+            <span class="ellipsis">...</span>
+          } @else {
+            <button
+              class="page-btn"
+              [class.active]="page === currentPage()"
+              (click)="goToPage(page)"
+              [disabled]="loading()"
+            >
+              {{ page }}
+            </button>
+          }
+        }
+
+        <button
+          class="page-btn"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages() || loading()"
+        >
+          Next
+        </button>
+      </div>
+
+      <div class="page-size">
+        <label>Per page:</label>
+        <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+          @for (size of pageSizeOptions; track size) {
+            <option [ngValue]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+</div>

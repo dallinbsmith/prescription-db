@@ -1,0 +1,275 @@
+.state-regulations-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #1a1a2e;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    color: #6b7280;
+  }
+
+  .btn-add {
+    padding: 0.75rem 1.5rem;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background: #4338ca;
+    }
+  }
+}
+
+.filter-section {
+  margin-bottom: 1.5rem;
+
+  select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    min-width: 200px;
+    font-size: 1rem;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+.state-group {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.25rem;
+    color: #1a1a2e;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+  }
+}
+
+.regulation-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .regulation-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.type-prohibited {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    &.type-restricted {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    &.type-requires_license {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    &.type-additional_requirements {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+  }
+
+  .applies-to {
+    font-weight: 500;
+    color: #1a1a2e;
+  }
+
+  .description {
+    color: #374151;
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+  }
+
+  .notes {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-style: italic;
+    margin: 0.5rem 0;
+  }
+
+  .regulation-footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+
+    a {
+      color: #4f46e5;
+      text-decoration: none;
+      font-size: 0.875rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #dc2626;
+      cursor: pointer;
+      font-size: 0.875rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  p {
+    color: #6b7280;
+    margin: 0 0 1rem;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background: #4338ca;
+    }
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.25rem;
+    color: #1a1a2e;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+
+  button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+
+    &[type="button"] {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      color: #374151;
+
+      &:hover {
+        background: #e5e7eb;
+      }
+    }
+
+    &[type="submit"] {
+      background: #4f46e5;
+      border: none;
+      color: #fff;
+
+      &:hover {
+        background: #4338ca;
+      }
+    }
+  }
+}

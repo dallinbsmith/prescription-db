@@ -1,0 +1,45 @@
+<div class="app-layout" [class.authenticated]="authService.isAuthenticated()">
+  @if (authService.isAuthenticated()) {
+    <nav class="sidebar">
+      <div class="logo">
+        <h1>Rx Database</h1>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/drugs" routerLinkActive="active">
+            <span class="icon">💊</span>
+            Drugs
+          </a>
+        </li>
+        <li>
+          <a routerLink="/competitors" routerLinkActive="active">
+            <span class="icon">🏪</span>
+            Competitors
+          </a>
+        </li>
+        <li>
+          <a routerLink="/state-regulations" routerLinkActive="active">
+            <span class="icon">📋</span>
+            State Regulations
+          </a>
+        </li>
+        <li>
+          <a routerLink="/compounding/formulas" routerLinkActive="active">
+            <span class="icon">🧪</span>
+            Compounding
+          </a>
+        </li>
+      </ul>
+      <div class="user-info">
+        <div class="user-details">
+          <span class="user-name">{{ authService.currentUser()?.name }}</span>
+          <span class="user-role">{{ authService.currentUser()?.role }}</span>
+        </div>
+        <button class="logout-btn" (click)="authService.logout()">Logout</button>
+      </div>
+    </nav>
+  }
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

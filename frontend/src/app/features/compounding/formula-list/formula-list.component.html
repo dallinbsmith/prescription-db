@@ -1,0 +1,78 @@
+<div class="formula-list-page">
+  <header class="page-header">
+    <div>
+      <h1>Compounding Formulas</h1>
+      <p>{{ total() | number }} formulas found</p>
+    </div>
+    <nav class="sub-nav">
+      <a routerLink="/compounding/formulas" class="active">Formulas</a>
+      <a routerLink="/compounding/ingredients">Ingredients</a>
+      <a routerLink="/compounding/regulations">Regulations</a>
+    </nav>
+  </header>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="search()"
+        placeholder="Search formulas..."
+      />
+      <button (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+
+    <div class="filters">
+      <select [(ngModel)]="filters.formula_type" (change)="search()">
+        <option value="">All Types</option>
+        <option value="503A">503A</option>
+        <option value="503B">503B</option>
+      </select>
+
+      <select [(ngModel)]="filters.status" (change)="search()">
+        <option value="">All Statuses</option>
+        <option value="DRAFT">Draft</option>
+        <option value="APPROVED">Approved</option>
+        <option value="DISCONTINUED">Discontinued</option>
+      </select>
+
+      <select [(ngModel)]="filters.species" (change)="search()">
+        <option value="">All Species</option>
+        <option value="HUMAN">Human</option>
+        <option value="ANIMAL">Animal</option>
+        <option value="BOTH">Both</option>
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="formulas-grid">
+      @for (formula of formulas(); track formula.id) {
+        <div class="formula-card" [routerLink]="['/compounding/formulas', formula.id]">
+          <div class="formula-header">
+            <h3>{{ formula.name }}</h3>
+            <span class="badge" [ngClass]="getStatusClass(formula.status)">
+              {{ formula.status }}
+            </span>
+          </div>
+          <div class="formula-meta">
+            <span class="type">{{ formula.formula_type }}</span>
+            <span class="divider">|</span>
+            <span class="form">{{ formula.dosage_form || 'N/A' }}</span>
+            <span class="divider">|</span>
+            <span class="species">{{ formula.species }}</span>
+          </div>
+          @if (formula.beyond_use_date) {
+            <p class="bud">BUD: {{ formula.beyond_use_date }}</p>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No formulas found.</p>
+        </div>
+      }
+    </div>
+  }
+</div>

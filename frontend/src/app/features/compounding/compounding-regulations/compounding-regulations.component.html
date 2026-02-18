@@ -1,0 +1,60 @@
+<div class="regulations-page">
+  <header class="page-header">
+    <div>
+      <h1>Compounding Regulations</h1>
+      <p>Federal and state compounding requirements</p>
+    </div>
+    <nav class="sub-nav">
+      <a routerLink="/compounding/formulas">Formulas</a>
+      <a routerLink="/compounding/ingredients">Ingredients</a>
+      <a routerLink="/compounding/regulations" class="active">Regulations</a>
+    </nav>
+  </header>
+
+  <div class="filter-section">
+    <select [(ngModel)]="selectedType" (change)="onTypeChange()">
+      <option value="">All Types</option>
+      @for (type of regulationTypes; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="regulations-list">
+      @for (reg of regulations(); track reg.id) {
+        <div class="regulation-card">
+          <div class="regulation-header">
+            <span class="badge" [ngClass]="getTypeClass(reg.regulation_type)">
+              {{ reg.regulation_type }}
+            </span>
+            @if (reg.state_code) {
+              <span class="state">{{ reg.state_code }}</span>
+            }
+          </div>
+          <h3>{{ reg.title }}</h3>
+          @if (reg.description) {
+            <p class="description">{{ reg.description }}</p>
+          }
+          <div class="regulation-meta">
+            @if (reg.effective_date) {
+              <span>Effective: {{ formatDate(reg.effective_date) }}</span>
+            }
+            @if (reg.source_url) {
+              <a [href]="reg.source_url" target="_blank" rel="noopener">View Source</a>
+            }
+          </div>
+          @if (reg.notes) {
+            <p class="notes">{{ reg.notes }}</p>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No regulations found.</p>
+        </div>
+      }
+    </div>
+  }
+</div>

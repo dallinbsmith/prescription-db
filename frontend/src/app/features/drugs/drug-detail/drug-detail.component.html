@@ -1,0 +1,148 @@
+@if (loading()) {
+  <div class="loading">Loading...</div>
+} @else if (drug()) {
+  <div class="drug-detail-page">
+    <nav class="breadcrumb">
+      <a routerLink="/drugs">Drugs</a>
+      <span>/</span>
+      <span>{{ drug()!.name }}</span>
+    </nav>
+
+    <div class="drug-header">
+      <h1>{{ drug()!.name }}</h1>
+      <div class="badges">
+        <span class="badge" [class.rx]="drug()!.rx_otc === 'RX'" [class.otc]="drug()!.rx_otc === 'OTC'">
+          {{ drug()!.rx_otc }}
+        </span>
+        @if (drug()!.dea_schedule) {
+          <span class="badge dea">Schedule {{ drug()!.dea_schedule }}</span>
+        }
+        <span class="badge species">{{ drug()!.species }}</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="main-content">
+        <section class="info-card">
+          <h2>Drug Information</h2>
+          <dl>
+            <div class="info-row">
+              <dt>NDC</dt>
+              <dd class="ndc">{{ drug()!.ndc }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Generic Name</dt>
+              <dd>{{ drug()!.generic_name || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Dosage Form</dt>
+              <dd>{{ drug()!.dosage_form || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Strength</dt>
+              <dd>{{ drug()!.strength || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Route</dt>
+              <dd>{{ drug()!.route || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Manufacturer</dt>
+              <dd>{{ drug()!.manufacturer || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Marketing Status</dt>
+              <dd>{{ drug()!.marketing_status || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>FDA Application Number</dt>
+              <dd>{{ drug()!.fda_application_number || '-' }}</dd>
+            </div>
+            <div class="info-row">
+              <dt>Source</dt>
+              <dd>{{ drug()!.source }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        @if (drug()!.active_ingredients?.length) {
+          <section class="info-card">
+            <h2>Active Ingredients</h2>
+            <ul class="ingredients-list">
+              @for (ing of drug()!.active_ingredients; track $index) {
+                <li>
+                  <span class="ing-name">{{ ing.name }}</span>
+                  @if (ing.strength) {
+                    <span class="ing-strength">{{ ing.strength }} {{ ing.unit }}</span>
+                  }
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+
+      <div class="sidebar">
+        <section class="discussions-card">
+          <h2>Team Discussion</h2>
+
+          <div class="new-comment">
+            @if (replyTo) {
+              <div class="replying-to">
+                Replying to comment
+                <button (click)="cancelReply()">Cancel</button>
+              </div>
+            }
+            <textarea
+              [(ngModel)]="newComment"
+              placeholder="Add a comment..."
+              rows="3"
+            ></textarea>
+            <button (click)="submitComment()" [disabled]="!newComment.trim()">
+              Post Comment
+            </button>
+          </div>
+
+          <div class="discussions-list">
+            @for (thread of getThreadedDiscussions(); track thread.discussion.id) {
+              <div class="discussion-thread">
+                <div class="discussion">
+                  <div class="discussion-header">
+                    <strong>{{ thread.discussion.user_name }}</strong>
+                    <span class="date">{{ thread.discussion.created_at | date: 'short' }}</span>
+                  </div>
+                  <p>{{ thread.discussion.content }}</p>
+                  <div class="discussion-actions">
+                    <button (click)="setReplyTo(thread.discussion.id)">Reply</button>
+                    @if (thread.discussion.user_id === authService.currentUser()?.id || authService.isAdmin()) {
+                      <button (click)="deleteComment(thread.discussion.id)">Delete</button>
+                    }
+                  </div>
+                </div>
+
+                @for (reply of thread.replies; track reply.id) {
+                  <div class="discussion reply">
+                    <div class="discussion-header">
+                      <strong>{{ reply.user_name }}</strong>
+                      <span class="date">{{ reply.created_at | date: 'short' }}</span>
+                    </div>
+                    <p>{{ reply.content }}</p>
+                    <div class="discussion-actions">
+                      @if (reply.user_id === authService.currentUser()?.id || authService.isAdmin()) {
+                        <button (click)="deleteComment(reply.id)">Delete</button>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @empty {
+              <p class="no-discussions">No discussions yet. Be the first to comment!</p>
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="not-found">Drug not found</div>
+}

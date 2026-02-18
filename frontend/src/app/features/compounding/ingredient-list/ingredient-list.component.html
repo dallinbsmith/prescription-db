@@ -1,0 +1,78 @@
+<div class="ingredient-list-page">
+  <header class="page-header">
+    <div>
+      <h1>Bulk Ingredients</h1>
+      <p>{{ total() | number }} ingredients</p>
+    </div>
+    <nav class="sub-nav">
+      <a routerLink="/compounding/formulas">Formulas</a>
+      <a routerLink="/compounding/ingredients" class="active">Ingredients</a>
+      <a routerLink="/compounding/regulations">Regulations</a>
+    </nav>
+  </header>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="search()"
+        placeholder="Search by name or CAS number..."
+      />
+      <button (click)="search()" [disabled]="loading()">Search</button>
+    </div>
+
+    <div class="filters">
+      <select [(ngModel)]="fdaBulkListFilter" (change)="search()">
+        <option value="">All FDA Status</option>
+        <option value="503A_POSITIVE">503A Positive</option>
+        <option value="503B_POSITIVE">503B Positive</option>
+        <option value="NOT_LISTED">Not Listed</option>
+        <option value="WITHDRAWN">Withdrawn</option>
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="ingredients-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>CAS Number</th>
+            <th>Category</th>
+            <th>USP/NF</th>
+            <th>FDA Bulk List</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ing of ingredients(); track ing.id) {
+            <tr>
+              <td class="name">{{ ing.name }}</td>
+              <td class="cas">{{ ing.cas_number || '-' }}</td>
+              <td>{{ ing.category || '-' }}</td>
+              <td>
+                @if (ing.usp_nf_status) {
+                  <span class="badge usp">USP/NF</span>
+                } @else {
+                  -
+                }
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getFdaListClass(ing.fda_bulk_list)">
+                  {{ ing.fda_bulk_list.replace('_', ' ') }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty">No ingredients found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

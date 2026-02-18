@@ -1,0 +1,17 @@
+{
+  "name": "prescription-db",
+  "version": "1.0.0",
+  "description": "Prescription Drug Reference Database",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "build:frontend": "cd frontend && npm run build -- --configuration=production",
+    "build": "npm run build:frontend && npm run copy:frontend",
+    "copy:frontend": "mkdir -p backend/public && cp -r frontend/dist/frontend/browser/* backend/public/",
+    "start": "cd backend && npm run start",
+    "dev": "cd backend && npm run dev",
+    "postinstall": "npm run install:all"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

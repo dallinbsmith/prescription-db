@@ -1,0 +1,139 @@
+<div class="state-regulations-page">
+  <header class="page-header">
+    <div>
+      <h1>State Regulations</h1>
+      <p>Track state-specific pharmacy regulations across all 50 states</p>
+    </div>
+    @if (authService.isAdmin()) {
+      <button class="btn-add" (click)="openForm()">Add Regulation</button>
+    }
+  </header>
+
+  <div class="filter-section">
+    <select [(ngModel)]="selectedState" (change)="onStateChange()">
+      <option value="">All States</option>
+      @for (state of usStates; track state) {
+        <option [value]="state">{{ state }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="regulations-list">
+      @for (entry of getRegulationsByState() | keyvalue; track entry.key) {
+        <div class="state-group">
+          <h2>{{ entry.key }}</h2>
+          @for (reg of entry.value; track reg.id) {
+            <div class="regulation-card">
+              <div class="regulation-header">
+                <span class="badge" [class]="'type-' + reg.regulation_type.toLowerCase()">
+                  {{ reg.regulation_type }}
+                </span>
+                <span class="applies-to">{{ reg.applies_to }}</span>
+              </div>
+              @if (reg.description) {
+                <p class="description">{{ reg.description }}</p>
+              }
+              @if (reg.notes) {
+                <p class="notes">{{ reg.notes }}</p>
+              }
+              <div class="regulation-footer">
+                @if (reg.source_url) {
+                  <a [href]="reg.source_url" target="_blank" rel="noopener">Source</a>
+                }
+                @if (authService.isAdmin()) {
+                  <button class="btn-delete" (click)="deleteRegulation(reg.id)">Delete</button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No regulations found.</p>
+          @if (authService.isAdmin()) {
+            <button (click)="openForm()">Add your first regulation</button>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (showForm) {
+  <div class="modal-overlay" (click)="closeForm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>Add State Regulation</h2>
+      <form (ngSubmit)="submitForm()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>State</label>
+            <select [(ngModel)]="formData.state_code" name="state_code" required>
+              <option value="">Select State</option>
+              @for (state of usStates; track state) {
+                <option [value]="state">{{ state }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Regulation Type</label>
+            <select [(ngModel)]="formData.regulation_type" name="regulation_type" required>
+              <option value="">Select Type</option>
+              @for (type of regulationTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Applies To</label>
+          <input
+            type="text"
+            [(ngModel)]="formData.applies_to"
+            name="applies_to"
+            placeholder="e.g., Schedule II, All Controlled Substances"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            [(ngModel)]="formData.description"
+            name="description"
+            rows="3"
+            placeholder="Details about this regulation..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Source URL</label>
+          <input
+            type="url"
+            [(ngModel)]="formData.source_url"
+            name="source_url"
+            placeholder="https://..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Internal Notes</label>
+          <textarea
+            [(ngModel)]="formData.notes"
+            name="notes"
+            rows="2"
+            placeholder="Notes for the team..."
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" (click)="closeForm()">Cancel</button>
+          <button type="submit">Save Regulation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

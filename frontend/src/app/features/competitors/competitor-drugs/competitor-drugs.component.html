@@ -1,0 +1,140 @@
+<div class="competitor-drugs-page">
+  <nav class="breadcrumb">
+    <a routerLink="/competitors">Competitors</a>
+    <span>/</span>
+    <span>{{ competitor }}</span>
+  </nav>
+
+  <header class="page-header">
+    <h1>{{ competitor }}</h1>
+    <p>{{ total() | number }} drugs found</p>
+  </header>
+
+  @if (totalUnfiltered() > 50) {
+    <div class="search-section">
+      <div class="search-bar">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="search()"
+          placeholder="Search by name or category..."
+        />
+        <button (click)="search()" [disabled]="loading()">Search</button>
+        @if (searchTerm) {
+          <button class="clear-btn" (click)="clearSearch()" [disabled]="loading()">Clear</button>
+        }
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <div class="drugs-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Rx Required</th>
+            <th>Consultation</th>
+            <th>Matched Drug</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (drug of drugs(); track drug.id) {
+            <tr>
+              <td class="drug-name">{{ drug.external_name }}</td>
+              <td>{{ drug.category || '-' }}</td>
+              <td>{{ formatPrice(drug.price) }}</td>
+              <td>
+                @if (drug.requires_prescription !== null) {
+                  {{ drug.requires_prescription ? 'Yes' : 'No' }}
+                } @else {
+                  -
+                }
+              </td>
+              <td>
+                @if (drug.requires_consultation !== null) {
+                  {{ drug.requires_consultation ? 'Yes' : 'No' }}
+                } @else {
+                  -
+                }
+              </td>
+              <td>
+                @if (drug.drug_id && drug.drug_name) {
+                  <a [routerLink]="['/drugs', drug.drug_id]">{{ drug.drug_name }}</a>
+                } @else {
+                  <span class="unmatched">Unmatched</span>
+                }
+              </td>
+              <td>
+                @if (drug.url) {
+                  <a [href]="drug.url" target="_blank" rel="noopener">View</a>
+                } @else {
+                  -
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty">No drugs found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (total() > 0) {
+      <div class="pagination">
+        <div class="pagination-info">
+          Showing {{ startIndex() | number }}-{{ endIndex() | number }} of {{ total() | number }}
+        </div>
+
+        <div class="pagination-controls">
+          <button
+            class="page-btn"
+            (click)="previousPage()"
+            [disabled]="currentPage() === 1 || loading()"
+          >
+            Previous
+          </button>
+
+          @for (page of visiblePages(); track $index) {
+            @if (page === '...') {
+              <span class="ellipsis">...</span>
+            } @else {
+              <button
+                class="page-btn"
+                [class.active]="page === currentPage()"
+                (click)="goToPage(page)"
+                [disabled]="loading()"
+              >
+                {{ page }}
+              </button>
+            }
+          }
+
+          <button
+            class="page-btn"
+            (click)="nextPage()"
+            [disabled]="currentPage() === totalPages() || loading()"
+          >
+            Next
+          </button>
+        </div>
+
+        <div class="page-size">
+          <label>Per page:</label>
+          <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+            @for (size of pageSizeOptions; track size) {
+              <option [ngValue]="size">{{ size }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    }
+  }
+</div>
