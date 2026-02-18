@@ -1,42 +1,50 @@
 <div class="app-layout" [class.authenticated]="authService.isAuthenticated()">
   @if (authService.isAuthenticated()) {
-    <nav class="sidebar">
+    <header class="mobile-header">
+      <h1>Rx Database</h1>
+      <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+    </header>
+    <div class="sidebar-overlay" [class.open]="sidebarOpen" (click)="closeSidebar()"></div>
+    <nav class="sidebar" [class.open]="sidebarOpen">
       <div class="logo">
         <h1>Rx Database</h1>
+        <button class="close-sidebar" (click)="closeSidebar()">✕</button>
       </div>
       <ul class="nav-links">
         <li>
-          <a routerLink="/drugs" routerLinkActive="active">
+          <a routerLink="/drugs" routerLinkActive="active" (click)="closeSidebar()">
             <span class="icon">💊</span>
             Drugs
           </a>
         </li>
         <li>
-          <a routerLink="/competitors" routerLinkActive="active">
+          <a routerLink="/competitors" routerLinkActive="active" (click)="closeSidebar()">
             <span class="icon">🏪</span>
             Competitors
           </a>
         </li>
         <li>
-          <a routerLink="/state-regulations" routerLinkActive="active">
+          <a routerLink="/state-regulations" routerLinkActive="active" (click)="closeSidebar()">
             <span class="icon">📋</span>
             State Regulations
           </a>
         </li>
         <li>
-          <a routerLink="/compounding/formulas" routerLinkActive="active">
+          <a routerLink="/compounding/formulas" routerLinkActive="active" (click)="closeSidebar()">
             <span class="icon">🧪</span>
             Compounding
           </a>
         </li>
       </ul>
-      <div class="user-info">
-        <div class="user-details">
-          <span class="user-name">{{ authService.currentUser()?.name }}</span>
-          <span class="user-role">{{ authService.currentUser()?.role }}</span>
+      @if (authService.currentUser()) {
+        <div class="user-info">
+          <div class="user-details">
+            <span class="user-name">{{ authService.currentUser()?.name }}</span>
+            <span class="user-role">{{ authService.currentUser()?.role }}</span>
+          </div>
+          <button class="logout-btn" (click)="authService.logout()">Logout</button>
         </div>
-        <button class="logout-btn" (click)="authService.logout()">Logout</button>
-      </div>
+      }
     </nav>
   }
   <main class="main-content">

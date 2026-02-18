@@ -273,3 +273,56 @@
     }
   }
 }
+
+// Mobile
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .btn-add {
+      width: 100%;
+    }
+  }
+
+  .filter-section {
+    select {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+
+  .regulation-card {
+    padding: 1rem;
+
+    .regulation-header {
+      flex-wrap: wrap;
+    }
+
+    .regulation-footer {
+      flex-wrap: wrap;
+    }
+  }
+
+  .modal {
+    margin: 1rem;
+    padding: 1.5rem;
+    max-height: calc(100vh - 2rem);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

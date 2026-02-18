@@ -274,3 +274,34 @@ dl {
     font-size: 0.875rem;
   }
 }
+
+// Mobile
+@media (max-width: 768px) {
+  .drug-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .info-card, .discussions-card {
+    padding: 1rem;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.25rem;
+
+    dt {
+      width: auto;
+      font-weight: 500;
+    }
+  }
+
+  .discussions-list {
+    .discussion {
+      &.reply {
+        margin-left: 0.75rem;
+      }
+    }
+  }
+}

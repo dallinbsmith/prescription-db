@@ -21,8 +21,8 @@ export class AuthService {
   private tokenSignal = signal<string | null>(null);
 
   currentUser = this.currentUserSignal.asReadonly();
-  isAuthenticated = computed(() => !!this.tokenSignal());
-  isAdmin = computed(() => this.currentUserSignal()?.role === 'ADMIN');
+  isAuthenticated = computed(() => true); // Authentication disabled
+  isAdmin = computed(() => true); // Authentication disabled
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadFromStorage();

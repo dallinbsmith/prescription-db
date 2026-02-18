@@ -165,3 +165,42 @@ dl {
   margin: 0;
   white-space: pre-wrap;
 }
+
+// Mobile
+@media (max-width: 768px) {
+  .formula-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .badges {
+      flex-wrap: wrap;
+    }
+  }
+
+  .info-card {
+    padding: 1rem;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.25rem;
+
+    dt {
+      width: auto;
+      font-weight: 500;
+    }
+  }
+
+  .ingredients-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    th, td {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+  }
+}

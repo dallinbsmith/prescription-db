@@ -12,30 +12,27 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  // Authentication disabled - allow all requests
   const authHeader = req.headers.authorization;
 
-  if (!authHeader?.startsWith('Bearer ')) {
-    throw new AppError(401, 'No token provided');
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice(7);
+    try {
+      const decoded = jwt.verify(token, config.jwt.secret) as {
+        id: string;
+        email: string;
+        role: string;
+      };
+      req.user = decoded;
+    } catch {
+      // Token invalid, but continue anyway
+    }
   }
 
-  const token = authHeader.slice(7);
-
-  try {
-    const decoded = jwt.verify(token, config.jwt.secret) as {
-      id: string;
-      email: string;
-      role: string;
-    };
-    req.user = decoded;
-    next();
-  } catch {
-    throw new AppError(401, 'Invalid token');
-  }
+  next();
 };
 
 export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  if (req.user?.role !== 'ADMIN') {
-    throw new AppError(403, 'Admin access required');
-  }
+  // Admin check disabled - allow all requests
   next();
 };

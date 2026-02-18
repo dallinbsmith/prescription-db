@@ -12,4 +12,13 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent {
   authService = inject(AuthService);
+  sidebarOpen = false;
+
+  toggleSidebar = () => {
+    this.sidebarOpen = !this.sidebarOpen;
+  };
+
+  closeSidebar = () => {
+    this.sidebarOpen = false;
+  };
 }

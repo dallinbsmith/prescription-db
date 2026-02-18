@@ -99,3 +99,14 @@ button[type="submit"] {
   font-size: 0.875rem;
   margin: 1.5rem 0 0;
 }
+
+// Mobile
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+}

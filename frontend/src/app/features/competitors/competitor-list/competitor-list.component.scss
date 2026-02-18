@@ -160,3 +160,46 @@
     }
   }
 }
+
+// Mobile
+@media (max-width: 768px) {
+  .page-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .competitors-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .competitor-card {
+    padding: 1rem;
+
+    .stats {
+      gap: 1rem;
+    }
+
+    .actions {
+      flex-direction: column;
+
+      .btn-view, .btn-scrape {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+
+    .scraper-buttons {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
