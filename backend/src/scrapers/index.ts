@@ -26,6 +26,7 @@ import { NovoNordiskScraper } from './NovoNordiskScraper.js';
 import { SkinnyRxScraper } from './SkinnyRxScraper.js';
 import { AmazonPharmacyScraper } from './AmazonPharmacyScraper.js';
 import { WalgreensScraper } from './WalgreensScraper.js';
+import { RexMdScraper } from './RexMdScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -55,6 +56,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   SKINNY_RX: () => new SkinnyRxScraper(),
   AMAZON_PHARMACY: () => new AmazonPharmacyScraper(),
   WALGREENS: () => new WalgreensScraper(),
+  REX_MD: () => new RexMdScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
