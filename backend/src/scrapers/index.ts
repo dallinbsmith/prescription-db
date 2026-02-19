@@ -25,6 +25,7 @@ import { MaximusTribeScraper } from './MaximusTribeScraper.js';
 import { NovoNordiskScraper } from './NovoNordiskScraper.js';
 import { SkinnyRxScraper } from './SkinnyRxScraper.js';
 import { AmazonPharmacyScraper } from './AmazonPharmacyScraper.js';
+import { WalgreensScraper } from './WalgreensScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -53,6 +54,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   NOVO_NORDISK: () => new NovoNordiskScraper(),
   SKINNY_RX: () => new SkinnyRxScraper(),
   AMAZON_PHARMACY: () => new AmazonPharmacyScraper(),
+  WALGREENS: () => new WalgreensScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
