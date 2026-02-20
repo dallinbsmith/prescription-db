@@ -4,8 +4,7 @@ node_modules/
 # Build outputs
 backend/dist/
 frontend/dist/
-backend/public/*
-!backend/public/.gitkeep
+# backend/public is now committed for reliable deploys
 
 # Environment files
 .env
