@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DrugsService, Drug } from '../../../core/services/drugs.service';
 import { DiscussionsService, Discussion } from '../../../core/services/discussions.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { RegistryService } from '../../../core/services/registry.service';
 
 @Component({
   selector: 'app-drug-detail',
@@ -17,11 +18,13 @@ export class DrugDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private drugsService = inject(DrugsService);
   private discussionsService = inject(DiscussionsService);
+  private registryService = inject(RegistryService);
   authService = inject(AuthService);
 
   drug = signal<Drug | null>(null);
   discussions = signal<Discussion[]>([]);
   loading = signal(true);
+  inRegistry = signal(false);
   newComment = '';
   replyTo: string | null = null;
 
@@ -30,8 +33,36 @@ export class DrugDetailComponent implements OnInit {
     if (id) {
       this.loadDrug(id);
       this.loadDiscussions(id);
+      this.checkRegistry(id);
     }
   }
+
+  checkRegistry = (drugId: string) => {
+    this.registryService.checkRegistry(drugId).subscribe({
+      next: (response) => {
+        this.inRegistry.set(response.inRegistry);
+      },
+    });
+  };
+
+  toggleRegistry = () => {
+    const drug = this.drug();
+    if (!drug) return;
+
+    if (this.inRegistry()) {
+      this.registryService.removeFromRegistry(drug.id).subscribe({
+        next: () => {
+          this.inRegistry.set(false);
+        },
+      });
+    } else {
+      this.registryService.addToRegistry(drug.id).subscribe({
+        next: () => {
+          this.inRegistry.set(true);
+        },
+      });
+    }
+  };
 
   loadDrug = (id: string) => {
     this.drugsService.getById(id).subscribe({

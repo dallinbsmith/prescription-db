@@ -9,7 +9,16 @@
     </nav>
 
     <div class="drug-header">
-      <h1>{{ drug()!.name }}</h1>
+      <div class="header-main">
+        <h1>{{ drug()!.name }}</h1>
+        <button
+          class="registry-btn"
+          [class.in-registry]="inRegistry()"
+          (click)="toggleRegistry()"
+        >
+          {{ inRegistry() ? '★ In Registry' : '☆ Add to Registry' }}
+        </button>
+      </div>
       <div class="badges">
         <span class="badge" [class.rx]="drug()!.rx_otc === 'RX'" [class.otc]="drug()!.rx_otc === 'OTC'">
           {{ drug()!.rx_otc }}

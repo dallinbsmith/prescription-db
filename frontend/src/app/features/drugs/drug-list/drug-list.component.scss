@@ -139,6 +139,34 @@
     color: #6b7280;
     padding: 2rem;
   }
+
+  .action-col {
+    width: 50px;
+  }
+
+  .action-cell {
+    text-align: center;
+  }
+}
+
+.registry-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #d1d5db;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.15s, transform 0.15s;
+
+  &:hover {
+    color: #f59e0b;
+    transform: scale(1.2);
+  }
+
+  &.in-registry {
+    color: #f59e0b;
+  }
 }
 
 .badge {

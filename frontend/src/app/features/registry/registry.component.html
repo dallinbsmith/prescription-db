@@ -1,0 +1,139 @@
+<div class="page-header">
+  <h1>Drug Registry</h1>
+  <p>Drugs you're tracking for potential sales or compounding</p>
+</div>
+
+<div class="search-bar">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Search registry..."
+    class="search-input"
+  />
+</div>
+
+@if (loading()) {
+  <div class="loading">Loading registry...</div>
+} @else if (filteredEntries().length === 0) {
+  <div class="empty-state">
+    @if (searchTerm) {
+      <p>No drugs match your search.</p>
+    } @else {
+      <p>Your registry is empty.</p>
+      <p>Add drugs from the <a routerLink="/drugs">Drugs</a> page to track them here.</p>
+    }
+  </div>
+} @else {
+  <div class="table-container">
+    <table class="registry-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Generic Name</th>
+          <th>Form</th>
+          <th>Strength</th>
+          <th>Manufacturer</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (entry of filteredEntries(); track entry.id) {
+          <tr [routerLink]="['/drugs', entry.drug_id]">
+            <td class="name-cell">{{ entry.drug.name }}</td>
+            <td>{{ entry.drug.generic_name || '-' }}</td>
+            <td>{{ entry.drug.dosage_form || '-' }}</td>
+            <td>{{ entry.drug.strength || '-' }}</td>
+            <td>{{ entry.drug.manufacturer || '-' }}</td>
+            <td>
+              <span class="badge" [class.rx]="entry.drug.rx_otc === 'RX'" [class.otc]="entry.drug.rx_otc === 'OTC'">
+                {{ entry.drug.rx_otc }}
+              </span>
+              @if (entry.drug.dea_schedule) {
+                <span class="badge dea">{{ entry.drug.dea_schedule }}</span>
+              }
+            </td>
+            <td class="actions-cell">
+              <button class="btn-competitors" (click)="openCompetitorsModal(entry, $event)">
+                Competitors
+              </button>
+              <button class="btn-remove" (click)="removeFromRegistry(entry, $event)">
+                Remove
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="summary">
+    Showing {{ filteredEntries().length }} of {{ entries().length }} drugs in registry
+  </div>
+}
+
+@if (showCompetitorsModal()) {
+  <div class="modal-overlay" (click)="closeCompetitorsModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Competitors Carrying This Drug</h2>
+        <button class="close-btn" (click)="closeCompetitorsModal()">&times;</button>
+      </div>
+
+      @if (selectedEntry()) {
+        <div class="drug-info">
+          <strong>{{ selectedEntry()!.drug.name }}</strong>
+          @if (selectedEntry()!.drug.generic_name) {
+            <span class="generic">({{ selectedEntry()!.drug.generic_name }})</span>
+          }
+        </div>
+      }
+
+      <div class="modal-body">
+        @if (loadingCompetitors()) {
+          <div class="loading">Loading competitors...</div>
+        } @else if (competitors().length === 0) {
+          <div class="empty-state">
+            <p>No competitors currently carry this drug.</p>
+          </div>
+        } @else {
+          <table class="competitors-table">
+            <thead>
+              <tr>
+                <th>Competitor</th>
+                <th>Listed Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (comp of competitors(); track comp.id) {
+                <tr>
+                  <td class="competitor-name">{{ comp.competitor }}</td>
+                  <td>{{ comp.external_name }}</td>
+                  <td>{{ formatPrice(comp.price) }}</td>
+                  <td>{{ comp.category || '-' }}</td>
+                  <td>
+                    @if (comp.url) {
+                      <a [href]="comp.url" target="_blank" class="link">View</a>
+                    } @else {
+                      -
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div class="competitor-count">
+            {{ competitors().length }} competitor(s) carry this drug
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCompetitorsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

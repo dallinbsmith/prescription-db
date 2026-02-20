@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DrugsService, Drug, DrugSearchParams } from '../../../core/services/drugs.service';
+import { RegistryService } from '../../../core/services/registry.service';
 
 @Component({
   selector: 'app-drug-list',
@@ -13,10 +14,12 @@ import { DrugsService, Drug, DrugSearchParams } from '../../../core/services/dru
 })
 export class DrugListComponent implements OnInit {
   private drugsService = inject(DrugsService);
+  private registryService = inject(RegistryService);
 
   drugs = signal<Drug[]>([]);
   total = signal(0);
   loading = signal(false);
+  registryDrugIds = signal<Set<string>>(new Set());
 
   searchTerm = '';
   currentPage = signal(1);
@@ -54,7 +57,47 @@ export class DrugListComponent implements OnInit {
 
   ngOnInit() {
     this.loadPage();
+    this.loadRegistryIds();
   }
+
+  loadRegistryIds = () => {
+    this.registryService.getRegistry().subscribe({
+      next: (entries) => {
+        this.registryDrugIds.set(new Set(entries.map(e => e.drug_id)));
+      },
+    });
+  };
+
+  isInRegistry = (drugId: string): boolean => {
+    return this.registryDrugIds().has(drugId);
+  };
+
+  toggleRegistry = (drug: Drug, event: Event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (this.isInRegistry(drug.id)) {
+      this.registryService.removeFromRegistry(drug.id).subscribe({
+        next: () => {
+          this.registryDrugIds.update(ids => {
+            const newIds = new Set(ids);
+            newIds.delete(drug.id);
+            return newIds;
+          });
+        },
+      });
+    } else {
+      this.registryService.addToRegistry(drug.id).subscribe({
+        next: () => {
+          this.registryDrugIds.update(ids => {
+            const newIds = new Set(ids);
+            newIds.add(drug.id);
+            return newIds;
+          });
+        },
+      });
+    }
+  };
 
   loadPage = () => {
     this.loading.set(true);

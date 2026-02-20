@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { query } from 'express-validator';
 import { DrugModel } from '../../models/Drug.js';
+import { CompetitorDrugModel } from '../../models/CompetitorDrug.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { authenticate } from '../middleware/auth.js';
@@ -35,6 +36,18 @@ drugsRouter.get(
   asyncHandler(async (req, res) => {
     const values = await DrugModel.getDistinctValues(req.params.field);
     res.json(values);
+  })
+);
+
+drugsRouter.get(
+  '/:id/competitors',
+  asyncHandler(async (req, res) => {
+    const drug = await DrugModel.findById(req.params.id);
+    if (!drug) {
+      throw new AppError(404, 'Drug not found');
+    }
+    const competitors = await CompetitorDrugModel.findByDrug(req.params.id);
+    res.json(competitors);
   })
 );
 

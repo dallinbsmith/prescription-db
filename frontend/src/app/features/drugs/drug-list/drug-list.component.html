@@ -53,6 +53,7 @@
           <th>Type</th>
           <th>DEA</th>
           <th>Species</th>
+          <th class="action-col"></th>
         </tr>
       </thead>
       <tbody>
@@ -78,10 +79,20 @@
               }
             </td>
             <td>{{ drug.species }}</td>
+            <td class="action-cell">
+              <button
+                class="registry-btn"
+                [class.in-registry]="isInRegistry(drug.id)"
+                (click)="toggleRegistry(drug, $event)"
+                [title]="isInRegistry(drug.id) ? 'Remove from Registry' : 'Add to Registry'"
+              >
+                {{ isInRegistry(drug.id) ? '★' : '☆' }}
+              </button>
+            </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="8" class="empty">
+            <td colspan="9" class="empty">
               @if (loading()) {
                 Loading...
               } @else {

@@ -41,6 +41,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/state-regulations/state-regulations.component').then(m => m.StateRegulationsComponent),
   },
   {
+    path: 'registry',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/registry/registry.component').then(m => m.RegistryComponent),
+  },
+  {
     path: 'compounding',
     canActivate: [authGuard],
     children: [

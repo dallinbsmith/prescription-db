@@ -11,6 +11,7 @@ import { discussionsRouter } from './api/routes/discussions.js';
 import { competitorsRouter } from './api/routes/competitors.js';
 import { stateRegulationsRouter } from './api/routes/stateRegulations.js';
 import { compoundingRouter } from './api/routes/compounding.js';
+import { registryRouter } from './api/routes/registry.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,7 @@ app.use('/api/discussions', discussionsRouter);
 app.use('/api/competitors', competitorsRouter);
 app.use('/api/state-regulations', stateRegulationsRouter);
 app.use('/api/compounding', compoundingRouter);
+app.use('/api/registry', registryRouter);
 
 app.use(errorHandler);
 
