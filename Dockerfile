@@ -18,12 +18,12 @@ COPY . .
 # Build frontend
 RUN cd frontend && npm run build -- --configuration=production
 
-# Copy frontend build to backend/public
-RUN mkdir -p backend/public && cp -r frontend/dist/frontend/browser/* backend/public/
+# Clean and copy frontend build to backend/public
+RUN rm -rf backend/public/* && mkdir -p backend/public && cp -r frontend/dist/frontend/browser/* backend/public/
 
 # Expose port
 EXPOSE 8080
 
-# Start backend
+# Start backend (clean old static files first)
 WORKDIR /app/backend
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "rm -rf public/* && cp -r ../frontend/dist/frontend/browser/* public/ && npm run start"]
