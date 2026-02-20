@@ -48,10 +48,14 @@ export class RegistryComponent implements OnInit {
   };
 
   loadRegistry = () => {
+    console.log('loadRegistry called');
     this.loading.set(true);
     this.registryService.getRegistry().subscribe({
       next: (data) => {
+        console.log('Registry data received:', data);
+        console.log('Data length:', data?.length);
         this.entries.set(data);
+        console.log('Entries after set:', this.entries());
         this.loading.set(false);
       },
       error: (err) => {
