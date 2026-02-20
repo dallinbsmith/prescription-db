@@ -43,9 +43,9 @@ export class RegistryComponent implements OnInit {
     this.registryService = registryService;
   }
 
-  ngOnInit = () => {
+  ngOnInit() {
     this.loadRegistry();
-  };
+  }
 
   loadRegistry = () => {
     console.log('loadRegistry called');
