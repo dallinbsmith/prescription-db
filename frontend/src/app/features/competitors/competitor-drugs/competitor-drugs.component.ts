@@ -10,7 +10,7 @@ import { RegistryService } from '../../../core/services/registry.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './competitor-drugs.component.html',
-  styleUrl: './competitor-drugs.component.scss',
+  styleUrls: ['./competitor-drugs.component.scss'],
 })
 export class CompetitorDrugsComponent implements OnInit {
   private route = inject(ActivatedRoute);

@@ -10,7 +10,7 @@ import { CompetitorDrug } from '../../core/services/competitors.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './registry.component.html',
-  styleUrl: './registry.component.scss',
+  styleUrls: ['./registry.component.scss'],
 })
 export class RegistryComponent implements OnInit {
   private registryService: RegistryService;
