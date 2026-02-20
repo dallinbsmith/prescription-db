@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CompetitorsService, CompetitorDrug } from '../../../core/services/competitors.service';
+import { RegistryService } from '../../../core/services/registry.service';
 
 @Component({
   selector: 'app-competitor-drugs',
@@ -14,12 +15,14 @@ import { CompetitorsService, CompetitorDrug } from '../../../core/services/compe
 export class CompetitorDrugsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private competitorsService = inject(CompetitorsService);
+  private registryService = inject(RegistryService);
 
   competitor = '';
   drugs = signal<CompetitorDrug[]>([]);
   total = signal(0);
   totalUnfiltered = signal(0);
   loading = signal(true);
+  registryDrugIds = signal<Set<string>>(new Set());
 
   searchTerm = '';
   currentPage = signal(1);
@@ -53,8 +56,51 @@ export class CompetitorDrugsComponent implements OnInit {
     this.competitor = this.route.snapshot.paramMap.get('competitor') || '';
     if (this.competitor) {
       this.loadInitial();
+      this.loadRegistryIds();
     }
   }
+
+  loadRegistryIds = () => {
+    this.registryService.getRegistry().subscribe({
+      next: (entries) => {
+        this.registryDrugIds.set(new Set(entries.map(e => e.drug_id)));
+      },
+    });
+  };
+
+  isInRegistry = (drugId: string | null): boolean => {
+    if (!drugId) return false;
+    return this.registryDrugIds().has(drugId);
+  };
+
+  toggleRegistry = (drug: CompetitorDrug, event: Event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!drug.drug_id) return;
+
+    if (this.isInRegistry(drug.drug_id)) {
+      this.registryService.removeFromRegistry(drug.drug_id).subscribe({
+        next: () => {
+          this.registryDrugIds.update(ids => {
+            const newIds = new Set(ids);
+            newIds.delete(drug.drug_id!);
+            return newIds;
+          });
+        },
+      });
+    } else {
+      this.registryService.addToRegistry(drug.drug_id).subscribe({
+        next: () => {
+          this.registryDrugIds.update(ids => {
+            const newIds = new Set(ids);
+            newIds.add(drug.drug_id!);
+            return newIds;
+          });
+        },
+      });
+    }
+  };
 
   loadInitial = () => {
     this.competitorsService.getDrugs(this.competitor, this.pageSize, 0).subscribe({
