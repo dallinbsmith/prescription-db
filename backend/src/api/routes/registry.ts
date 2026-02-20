@@ -15,7 +15,7 @@ registryRouter.use(authenticate);
 registryRouter.get(
   '/',
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = DEFAULT_USER_ID; // Auth disabled - use shared registry
     const entries = await RegistryModel.findByUser(userId);
     res.json(entries);
   })
@@ -24,7 +24,7 @@ registryRouter.get(
 registryRouter.get(
   '/check/:drugId',
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = DEFAULT_USER_ID; // Auth disabled - use shared registry
     const entry = await RegistryModel.findByUserAndDrug(userId, req.params.drugId);
     res.json({ inRegistry: !!entry, entry });
   })
@@ -40,7 +40,7 @@ registryRouter.post(
       throw new AppError(400, 'Invalid input');
     }
 
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = DEFAULT_USER_ID; // Auth disabled - use shared registry
     const { drugId, notes } = req.body;
 
     const drug = await DrugModel.findById(drugId);
@@ -56,7 +56,7 @@ registryRouter.post(
 registryRouter.delete(
   '/:drugId',
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = DEFAULT_USER_ID; // Auth disabled - use shared registry
     const removed = await RegistryModel.remove(userId, req.params.drugId);
 
     if (!removed) {
@@ -76,7 +76,7 @@ registryRouter.patch(
       throw new AppError(400, 'Invalid input');
     }
 
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = DEFAULT_USER_ID; // Auth disabled - use shared registry
     const entry = await RegistryModel.updateNotes(userId, req.params.drugId, req.body.notes);
 
     if (!entry) {
