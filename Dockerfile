@@ -26,4 +26,4 @@ EXPOSE 8080
 
 # Start backend (clean old static files first)
 WORKDIR /app/backend
-CMD ["sh", "-c", "rm -rf public/* && cp -r ../frontend/dist/frontend/browser/* public/ && npm run start"]
+CMD ["sh", "-c", "echo '=== Debug: Files in public before ===' && ls -la public/ 2>/dev/null || echo 'public dir empty/missing' && echo '=== Debug: Files in frontend dist ===' && ls ../frontend/dist/frontend/browser/*.js 2>/dev/null | head -5 || echo 'No frontend dist' && echo '=== Cleaning and copying ===' && rm -rf public/* && cp -r ../frontend/dist/frontend/browser/* public/ && echo '=== Files in public after ===' && ls public/*.js | head -5 && npm run start"]
