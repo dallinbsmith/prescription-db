@@ -31,6 +31,7 @@ import { AlloyScraper } from './AlloyScraper.js';
 import { MochiHealthScraper } from './MochiHealthScraper.js';
 import { OlympiaPharmaceuticalsScraper } from './OlympiaPharmaceuticalsScraper.js';
 import { EmpowerPharmacyScraper } from './EmpowerPharmacyScraper.js';
+import { GennevScraper } from './GennevScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -65,6 +66,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   MOCHI_HEALTH: () => new MochiHealthScraper(),
   OLYMPIA_PHARMACEUTICALS: () => new OlympiaPharmaceuticalsScraper(),
   EMPOWER_PHARMACY: () => new EmpowerPharmacyScraper(),
+  GENNEV: () => new GennevScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
