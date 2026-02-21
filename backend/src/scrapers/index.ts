@@ -32,6 +32,7 @@ import { MochiHealthScraper } from './MochiHealthScraper.js';
 import { OlympiaPharmaceuticalsScraper } from './OlympiaPharmaceuticalsScraper.js';
 import { EmpowerPharmacyScraper } from './EmpowerPharmacyScraper.js';
 import { GennevScraper } from './GennevScraper.js';
+import { HoneybeeHealthScraper } from './HoneybeeHealthScraper.js';
 
 export const scrapers: Record<string, () => BaseScraper> = {
   COST_PLUS_DRUGS: () => new CostPlusDrugsScraper(),
@@ -67,6 +68,7 @@ export const scrapers: Record<string, () => BaseScraper> = {
   OLYMPIA_PHARMACEUTICALS: () => new OlympiaPharmaceuticalsScraper(),
   EMPOWER_PHARMACY: () => new EmpowerPharmacyScraper(),
   GENNEV: () => new GennevScraper(),
+  HONEYBEE_HEALTH: () => new HoneybeeHealthScraper(),
 };
 
 export const runScraper = async (competitorName: string) => {
